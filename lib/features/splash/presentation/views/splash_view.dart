@@ -1,10 +1,19 @@
-import 'package:eonify/core/app_colors.dart';
-import 'package:eonify/core/assets.dart';
-import 'package:eonify/features/home/presentation/views/home_view.dart';
+// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors
+
+import 'package:eonify/core/helper_functions/app_colors.dart';
+import 'package:eonify/core/helper_functions/app_constants.dart';
+import 'package:eonify/core/helper_functions/assets.dart';
+import 'package:eonify/core/services/shared_prefs_singleton.dart';
+import 'package:eonify/features/onBoarding/presentation/views/on_boarding_view.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
+import '../../../home/presentation/views/home_view.dart';
+
 class SplashView extends StatefulWidget {
+  static const routeName = 'splash';
+
   @override
   _SplashViewState createState() => _SplashViewState();
 }
@@ -13,7 +22,6 @@ class _SplashViewState extends State<SplashView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
-
   @override
   void initState() {
     super.initState();
@@ -26,11 +34,19 @@ class _SplashViewState extends State<SplashView>
     );
     _animationController.forward();
 
+    _checkOnboardingStatus();
+  }
+
+  Future<void> _checkOnboardingStatus() async {
+    bool hasSeenOnboarding = Prefs.getBool(KisOnboardingViewSeen);
+
     Timer(const Duration(seconds: 3), () {
       // Total splash duration
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (context) => HomeView()));
+      if (hasSeenOnboarding) {
+        Navigator.pushReplacementNamed(context, HomeView.routeName);
+      } else {
+        Navigator.pushReplacementNamed(context, OnBoardingView.routeName);
+      }
     });
   }
 

@@ -1,10 +1,11 @@
+import 'package:eonify/core/helper_functions/app_routes.dart';
+import 'package:eonify/core/services/shared_prefs_singleton.dart';
 import 'package:flutter/material.dart';
-
-import 'features/home/presentation/views/home_view.dart';
 import 'features/splash/presentation/views/splash_view.dart';
-import 'package:go_router/go_router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Prefs.init();
   runApp(const MyApp());
 }
 
@@ -15,16 +16,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Animated Splash',
-      home: SplashView(), // Set SplashScreen as the initial screen
+      onGenerateRoute: onGenerateRoute,
+      initialRoute: SplashView.routeName,
     );
   }
-
-  List<GoRoute> get appRoutes => [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => SplashView(),
-      routes: [GoRoute(path: 'home', builder: (context, state) => HomeView())],
-    ),
-  ];
 }
