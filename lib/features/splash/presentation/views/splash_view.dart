@@ -6,7 +6,6 @@ import 'package:eonify/core/helper_functions/assets.dart';
 import 'package:eonify/core/services/shared_prefs_singleton.dart';
 import 'package:eonify/features/onBoarding/presentation/views/on_boarding_view.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 import '../../../home/presentation/views/home_view.dart';
