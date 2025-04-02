@@ -1,9 +1,14 @@
+// ignore_for_file: unused_field, prefer_final_fields, unused_element, prefer_const_constructors_in_immutables, use_build_context_synchronously, avoid_print
+
 import 'package:eonify/core/helper_functions/app_colors.dart';
 import 'package:eonify/core/helper_functions/app_constants.dart';
 import 'package:eonify/core/helper_functions/assets.dart';
+import 'package:eonify/core/services/auth_service.dart';
 import 'package:eonify/features/auth/presentation/views/widgets/custom_auth_button.dart';
 import 'package:eonify/features/auth/presentation/views/widgets/custom_text_field.dart';
+import 'package:eonify/features/home/presentation/views/home_view.dart';
 import 'package:eonify/r.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +23,77 @@ class SignUpView extends StatefulWidget {
 
 class _SignUpViewState extends State<SignUpView> {
   final TextEditingController nameController = TextEditingController();
+  // ! parameters
 
+  final FirebaseService _firebaseService = FirebaseService();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  String _errorMessage = '';
   bool _isChecked = false;
+
+  // ! register user with email and password
+
+  Future<void> _register() async {
+    try {
+      await _firebaseService.registerUser(
+        _usernameController.text.trim(),
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeView()),
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message!;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An unexpected error occurred.';
+      });
+    }
+  }
+
+  // ! register with google
+
+  Future<void> _registerWithGoogle() async {
+    try {
+      await _firebaseService.signInWithGoogle();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeView()),
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message!;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An unexpected error occurred.';
+      });
+    }
+  }
+
+  // ! register with facebook
+  Future<void> _registerWithFacebook() async {
+    try {
+      await _firebaseService.signInWithFacebook();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeView()),
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message!;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An unexpected error occurred.';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,59 +148,70 @@ class _SignUpViewState extends State<SignUpView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 163,
-                      height: 68,
-                      color: Color(0xfff6f9fe),
+                    // ! register with facebook
+                    GestureDetector(
+                      onTap: _registerWithFacebook,
+                      child: Container(
+                        width: 163,
+                        height: 68,
+                        color: Color(0xfff6f9fe),
 
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image.asset(AssetImages.facebook, fit: BoxFit.fill),
-                            SizedBox(
-                              width: 91,
-                              child: Text(
-                                'Facebook',
-                                style: TextStyle(
-                                  color: const Color(0xFF61677D),
-                                  fontSize: 16,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.50,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Image.asset(
+                                AssetImages.facebook,
+                                fit: BoxFit.fill,
+                              ),
+                              SizedBox(
+                                width: 91,
+                                child: Text(
+                                  'Facebook',
+                                  style: TextStyle(
+                                    color: const Color(0xFF61677D),
+                                    fontSize: 16,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.50,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    Container(
-                      width: 163,
-                      height: 68,
-                      color: Color(0xfff6f9fe),
+                    // ! register with google
+                    GestureDetector(
+                      onTap: _registerWithGoogle,
+                      child: Container(
+                        width: 163,
+                        height: 68,
+                        color: Color(0xfff6f9fe),
 
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image.asset(AssetImages.google, fit: BoxFit.fill),
-                            SizedBox(
-                              width: 91,
-                              child: Text(
-                                'Google',
-                                style: TextStyle(
-                                  color: const Color(0xFF61677D),
-                                  fontSize: 16,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.50,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Image.asset(AssetImages.google, fit: BoxFit.fill),
+                              SizedBox(
+                                width: 91,
+                                child: Text(
+                                  'Google',
+                                  style: TextStyle(
+                                    color: const Color(0xFF61677D),
+                                    fontSize: 16,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.50,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -162,11 +247,21 @@ class _SignUpViewState extends State<SignUpView> {
                 ),
               ),
               kSizeBoxBetweenItems16,
-              CustomTextField(hintText: 'Name'),
+              CustomTextField(
+                hintText: 'Name',
+                controller: _usernameController,
+              ),
               kSizeBoxBetweenItems16,
-              CustomTextField(hintText: 'Email/Phone Number'),
+              CustomTextField(
+                hintText: 'Email/Phone Number',
+                controller: _emailController,
+              ),
               kSizeBoxBetweenItems16,
-              CustomTextField(hintText: 'Password', icon: Icons.visibility_off),
+              CustomTextField(
+                hintText: 'Password',
+                controller: _passwordController,
+                icon: Icons.visibility_off,
+              ),
               SizedBox(height: 30),
 
               Row(
@@ -225,7 +320,11 @@ class _SignUpViewState extends State<SignUpView> {
                 ],
               ),
               SizedBox(height: 32),
-              CustomAuthBtn(btnTitle: 'Sign up', onPressed: () {}),
+              // ! register
+              CustomAuthBtn(btnTitle: 'Sign up', onPressed: _register),
+              // ! error message
+              if (_errorMessage.isNotEmpty)
+                Text(_errorMessage, style: TextStyle(color: Colors.red)),
               kSizeBoxBetweenItems16,
               GestureDetector(
                 onTap: () {

@@ -1,10 +1,15 @@
+// ignore_for_file: prefer_const_constructors_in_immutables, unused_field, prefer_final_fields, unused_element, use_build_context_synchronously, avoid_print
+
 import 'package:eonify/core/helper_functions/app_colors.dart';
 import 'package:eonify/core/helper_functions/app_constants.dart';
 import 'package:eonify/core/helper_functions/assets.dart';
+import 'package:eonify/core/services/auth_service.dart';
 import 'package:eonify/features/auth/presentation/views/forget_password_view.dart';
 import 'package:eonify/features/auth/presentation/views/widgets/custom_auth_button.dart';
 import 'package:eonify/features/auth/presentation/views/widgets/custom_text_field.dart';
+import 'package:eonify/features/home/presentation/views/home_view.dart';
 import 'package:eonify/r.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -18,9 +23,36 @@ class SignInView extends StatefulWidget {
 }
 
 class _SignInViewState extends State<SignInView> {
-  final TextEditingController nameController = TextEditingController();
-
+  // ! parameters
+  final FirebaseService _firebaseService = FirebaseService();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  String _errorMessage = '';
   bool _isChecked = false;
+
+  // ! sign in
+
+  Future<void> _signIn() async {
+    try {
+      await _firebaseService.signInUser(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+      // Sign-in successful, navigate to next screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeView()),
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message!;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An unexpected error occurred.';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,9 +195,17 @@ class _SignInViewState extends State<SignInView> {
                 ),
               ),
               kSizeBoxBetweenItems16,
-              CustomTextField(hintText: 'solaiman57544@gmail.com'),
+              CustomTextField(
+                hintText: 'solaiman57544@gmail.com',
+                controller: _emailController,
+              ),
+
               kSizeBoxBetweenItems16,
-              CustomTextField(hintText: '••••••••', icon: Icons.visibility_off),
+              CustomTextField(
+                hintText: '••••••••',
+                controller: _passwordController,
+                icon: Icons.visibility_off,
+              ),
               SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
@@ -246,7 +286,11 @@ class _SignInViewState extends State<SignInView> {
                 ],
               ),
               SizedBox(height: 32),
-              CustomAuthBtn(btnTitle: 'Sign up', onPressed: () {}),
+              // ! sign in
+              CustomAuthBtn(btnTitle: 'Sign up', onPressed: _signIn),
+              if (_errorMessage.isNotEmpty)
+                Text(_errorMessage, style: TextStyle(color: Colors.red)),
+
               kSizeBoxBetweenItems16,
               GestureDetector(
                 onTap: () {

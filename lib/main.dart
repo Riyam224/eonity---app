@@ -2,10 +2,18 @@ import 'package:eonify/core/helper_functions/app_routes.dart';
 import 'package:eonify/core/services/shared_prefs_singleton.dart';
 import 'package:eonify/features/auth/presentation/views/sign_up_view.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
+  // todo shared prefs
   WidgetsFlutterBinding.ensureInitialized();
   await Prefs.init();
+
+  // todo firebase
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(const MyApp());
 }
 

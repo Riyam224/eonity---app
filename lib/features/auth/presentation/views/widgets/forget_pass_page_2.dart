@@ -1,3 +1,5 @@
+// ignore_for_file: sized_box_for_whitespace
+
 import 'package:eonify/core/helper_functions/app_constants.dart';
 import 'package:flutter/material.dart';
 

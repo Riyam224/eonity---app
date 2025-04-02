@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "628670786115",
+    "project_id": "eonify-e2109",
+    "storage_bucket": "eonify-e2109.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628670786115:android:9635f73abba7989ce7c2f6",
+        "android_client_info": {
+          "package_name": "com.example.eonify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBO77IcjOw5gCMzqrhTLWxojjhYZEuXmBQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

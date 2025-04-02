@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: constant_identifier_names
 const KisOnboardingViewSeen = 'isOnBoardingViewSeen';
 const kSizeBoxBetweenItems16 = SizedBox(height: 16);
 const kSizeBoxBetweenItems24 = SizedBox(height: 24);
