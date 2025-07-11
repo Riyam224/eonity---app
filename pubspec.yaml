@@ -88,3 +88,4 @@ flutter_assets:
   output_path: lib/core/
   filename: assets.dart
   field_prefix: null
+ 
